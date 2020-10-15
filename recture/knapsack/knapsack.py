@@ -61,8 +61,9 @@ def knapsack(capacity, items):
     #print(x)
     for count in range(n):
         x.append(LpVariable('x'+str(count),cat='Binary'))
-    
+    #目的関数
     prob += lpSum((items[i].value * x[i]) for i in range(n))
+    #制約条件
     prob += lpSum((items[i].weight * x[i]) for i in range(n)) <= capacity
 
     solution = prob.solve()
