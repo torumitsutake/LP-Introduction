@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from collections import namedtuple
 
-from pulp import LpMaximize, LpProblem, LpVariable, lpSum, lpDot
+from pulp import LpMaximize, LpProblem, LpVariable, lpSum, lpDot,value
 
 
 def main(problem_file):
@@ -69,6 +69,24 @@ def knapsack(capacity, items):
     solution = prob.solve()
     #for i in range(n):
         #print(int(x[i].value()))
+
+    secprob  = LpProblem(sense=LpMaximize)
+
+    y = []
+    #x = LpVariable.dicts('x',range(n),cat='Binary')
+    #print(x)
+    for count in range(n):
+        y.append(LpVariable('y'+str(count),cat='Binary'))
+    #目的関数
+    secprob += lpSum((items[i].value * y[i]) for i in range(n))
+    #制約条件
+    secprob += lpSum((items[i].weight * y[i]) for i in range(n)) <= capacity
+    secprob += lpSum((items[i].value * y[i]) for i in range(n)) <= value(prob.objective) - 1
+    print(value(prob.objective))
+    print("---------------")
+    solution = secprob.solve()
+
+
 
     ...
 
